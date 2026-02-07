@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react'
 import { useTheme } from '../contexts/ThemeContext'
 import { useDashboardData } from '../hooks/useDashboardData'
-import { api } from '../services/api'
 import logoGif from '../assets/Cloud robotics abstract.gif'
 import TopMetrics from '../components/dashboard/TopMetrics'
 import RiskDistribution from '../components/charts/RiskDistribution'
@@ -25,10 +24,12 @@ const Dashboard = () => {
     topRiskVendors,
     loading,
     syncing,
+    uploading,
     syncEmail,
+    uploadStatement,
   } = useDashboardData()
 
-  const [uploading, setUploading] = useState(false)
+  const [notificationCount] = useState(1)
   const fileInputRef = useRef(null)
 
   const handleSyncEmail = async () => {
@@ -53,14 +54,11 @@ const Dashboard = () => {
       return
     }
     try {
-      setUploading(true)
-      const result = await api.uploadPdf(file)
+      const result = await uploadStatement(file)
       alert(result.message)
       e.target.value = ''
     } catch (err) {
       alert('Upload failed: ' + (err?.message || 'Unknown error'))
-    } finally {
-      setUploading(false)
     }
   }
 

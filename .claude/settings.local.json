@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir:*)",
+      "Bash(find:*)",
+      "Bash(.venvScriptspip install fastapi uvicorn httpx pydantic)",
+      "Bash(.venv/Scripts/pip install:*)",
+      "Bash(curl:*)",
+      "Bash(...venvScriptspip install pdfplumber python-multipart)",
+      "Bash(C:/Users/Kamalesh/firwatch-tools/.venv/Scripts/pip install:*)"
+    ]
+  }
+}

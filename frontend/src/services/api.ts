@@ -11,7 +11,7 @@ export interface DashboardSummary {
 export interface Alert {
   id: string
   riskScore: number
-  type: 'Invoice' | 'Statement'
+  type: 'Invoice' | 'Transaction'
   vendor: string
   amount: number | null
   reason: string
@@ -76,88 +76,72 @@ export interface ReportAnalysis {
 
 export const api = {
   async getDashboardSummary(): Promise<DashboardSummary> {
-    await new Promise(resolve => setTimeout(resolve, 300))
-    return {
-      totalInvoices: 0,
-      highRiskAlerts: 0,
-      flaggedAmount: 0,
-      casesResolved: 0,
-    }
+    const res = await fetch('/api/dashboard/summary')
+    if (!res.ok) throw new Error('Failed to fetch dashboard summary')
+    return res.json()
   },
 
   async getAlerts(): Promise<Alert[]> {
-    await new Promise(resolve => setTimeout(resolve, 300))
-    return []
+    const res = await fetch('/api/alerts')
+    if (!res.ok) throw new Error('Failed to fetch alerts')
+    return res.json()
   },
 
   async getRiskDistribution(): Promise<RiskDistribution> {
-    await new Promise(resolve => setTimeout(resolve, 300))
-    return { low: 0, medium: 0, high: 0 }
+    const res = await fetch('/api/risk-distribution')
+    if (!res.ok) throw new Error('Failed to fetch risk distribution')
+    return res.json()
   },
 
   async getAlertsOverTime(): Promise<AlertTimeSeries[]> {
-    await new Promise(resolve => setTimeout(resolve, 300))
-    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-    return days.map(date => ({ date, count: 0 }))
+    const res = await fetch('/api/alerts-over-time')
+    if (!res.ok) throw new Error('Failed to fetch alerts over time')
+    return res.json()
   },
 
   async getTopAnomalies(): Promise<Anomaly[]> {
-    await new Promise(resolve => setTimeout(resolve, 300))
-    return []
+    const res = await fetch('/api/top-anomalies')
+    if (!res.ok) throw new Error('Failed to fetch top anomalies')
+    return res.json()
   },
 
   async getInvestigationCase(_caseId?: string): Promise<InvestigationCase | null> {
-    await new Promise(resolve => setTimeout(resolve, 300))
-    return null
+    const res = await fetch('/api/investigation-case')
+    if (!res.ok) throw new Error('Failed to fetch investigation case')
+    return res.json()
   },
 
   async getPatternInsights(): Promise<PatternInsight[]> {
-    await new Promise(resolve => setTimeout(resolve, 300))
-    return []
+    const res = await fetch('/api/pattern-insights')
+    if (!res.ok) throw new Error('Failed to fetch pattern insights')
+    return res.json()
   },
 
   async getTopRiskVendors(): Promise<TopRiskVendor[]> {
-    await new Promise(resolve => setTimeout(resolve, 300))
-    return []
+    const res = await fetch('/api/top-risk-vendors')
+    if (!res.ok) throw new Error('Failed to fetch top risk vendors')
+    return res.json()
   },
 
   async syncEmail(): Promise<{ success: boolean; message: string }> {
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    
-    return {
-      success: true,
-      message: 'Email sync initiated successfully',
-    }
+    const res = await fetch('/api/sync-email', { method: 'POST' })
+    if (!res.ok) throw new Error('Email sync failed')
+    return res.json()
   },
 
   async getReportAnalysis(alertId: string): Promise<ReportAnalysis | null> {
-    await new Promise(resolve => setTimeout(resolve, 400))
-    const alerts = await this.getAlerts()
-    const alert = alerts.find(a => a.id === alertId) ?? null
-    if (!alert) return null
-
-    const riskLevel: 'LOW' | 'MEDIUM' | 'HIGH' =
-      alert.riskScore >= 70 ? 'HIGH' : alert.riskScore >= 50 ? 'MEDIUM' : 'LOW'
-
-    // Placeholder until backend provides analysis by alertId
-    return {
-      alert,
-      riskScore: alert.riskScore,
-      riskLevel,
-      summary: '',
-      factors: [],
-      flags: [alert.reason],
-      similarCases: [],
-    }
+    const res = await fetch(`/api/report/${alertId}`)
+    if (res.status === 404) return null
+    if (!res.ok) throw new Error('Failed to fetch report analysis')
+    return res.json()
   },
 
-  async uploadPdf(file: File): Promise<{ success: boolean; message: string; id?: string }> {
-    await new Promise(resolve => setTimeout(resolve, 1200))
-    return {
-      success: true,
-      message: `PDF "${file.name}" uploaded successfully. It will be processed and appear in the alert queue.`,
-      id: `upload-${Date.now()}`,
-    }
+  async uploadStatement(file: File): Promise<{ success: boolean; message: string; processed?: number }> {
+    const formData = new FormData()
+    formData.append('file', file)
+    const res = await fetch('/api/upload-statement', { method: 'POST', body: formData })
+    if (!res.ok) throw new Error('Upload failed')
+    return res.json()
   },
 }
 
