@@ -2,9 +2,20 @@ import React from 'react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts'
 
 const TopAnomalies = ({ data }) => {
-  if (!data || data.length === 0) return null
+  if (!data) return null
 
   const colors = ['#ef4444', '#f59e0b', '#f97316', '#10b981']
+
+  if (data.length === 0) {
+    return (
+      <div className="bg-slate-800/85 backdrop-blur-xl border border-slate-600/50 border-l-4 border-l-blue-500 rounded-2xl p-6 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-slate-500/60">
+        <h3 className="text-lg font-bold text-slate-100 tracking-tight mb-5">Top Anomalies</h3>
+        <div className="h-[250px] flex items-center justify-center text-slate-400 text-sm">
+          No anomalies yet
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="bg-slate-800/85 backdrop-blur-xl border border-slate-600/50 border-l-4 border-l-blue-500 rounded-2xl p-6 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-slate-500/60">
