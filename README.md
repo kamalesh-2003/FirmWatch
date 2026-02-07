@@ -1,4 +1,4 @@
-# 📊 FirmWatch — AI Financial Risk Monitoring Agent
+# 📊 FirmWatch - AI Financial Risk Monitoring Agent
 
 FirmWatch is an AI-powered financial risk monitoring system that helps enterprise finance teams detect invoice fraud, identify anomalies, and enforce compliance policies before payments are approved.
 
