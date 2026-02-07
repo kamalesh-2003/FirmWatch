@@ -61,7 +61,7 @@ const ChatBot = () => {
       {/* Floating chat button */}
       <button
         onClick={() => setIsOpen((o) => !o)}
-        className="fixed bottom-6 right-6 z-40 w-16 h-16 rounded-full bg-slate-800 border-2 border-slate-600 shadow-lg flex items-center justify-center text-slate-100 hover:bg-slate-700 hover:border-blue-500/50 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+        className="fixed bottom-6 right-6 z-40 w-16 h-16 rounded-full bg-whitesmoke dark:bg-neutral-900 border-2 border-neutral-300 dark:border-neutral-600 shadow-lg flex items-center justify-center text-neutral-800 dark:text-neutral-100 hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
         aria-label={isOpen ? 'Close chat' : 'Open chat'}
       >
         {isOpen ? (
@@ -75,22 +75,22 @@ const ChatBot = () => {
 
       {/* Chat panel */}
       <div
-        className={`fixed bottom-24 right-6 z-30 w-full max-w-md flex flex-col rounded-2xl border border-slate-600/60 bg-slate-800/95 backdrop-blur-xl shadow-2xl transition-all duration-300 ${
+        className={`fixed bottom-24 right-6 z-30 w-full max-w-md flex flex-col rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-whitesmoke dark:bg-neutral-900/95 backdrop-blur-xl shadow-2xl transition-all duration-300 ${
           isOpen ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-4 pointer-events-none'
         }`}
         style={{ maxHeight: 'min(calc(100vh - 7rem), 520px)' }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-slate-600/60 rounded-t-2xl bg-slate-800/90">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 rounded-t-2xl bg-whitesmoke dark:bg-neutral-900/95">
           <div className="flex items-center gap-3">
-            <div className="w-14 h-14 rounded-xl bg-slate-700/80 flex items-center justify-center flex-shrink-0 border border-slate-600/50 overflow-hidden">
+            <div className="w-14 h-14 rounded-xl bg-neutral-200 dark:bg-neutral-800 flex items-center justify-center flex-shrink-0 border border-neutral-200 dark:border-neutral-600 overflow-hidden">
               <img src={liveChatbotGif} alt="" className="w-10 h-10 object-contain" />
             </div>
-            <span className="font-semibold text-slate-100">firmMatch Assistant</span>
+            <span className="font-semibold text-neutral-900 dark:text-neutral-100">firmMatch Assistant</span>
           </div>
           <button
             onClick={() => setIsOpen(false)}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-700 transition-colors"
+            className="p-1.5 rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-100 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
             aria-label="Close"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -109,8 +109,8 @@ const ChatBot = () => {
               <div
                 className={`max-w-[85%] rounded-2xl px-4 py-2.5 ${
                   msg.role === 'user'
-                    ? 'bg-blue-600 text-white rounded-br-md'
-                    : 'bg-slate-700/80 text-slate-100 border border-slate-600/50 rounded-bl-md'
+                    ? 'bg-neutral-800 dark:bg-neutral-200 text-white dark:text-neutral-900 rounded-br-md'
+                    : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-100 border border-neutral-200 dark:border-neutral-600 rounded-bl-md'
                 }`}
               >
                 <p className="text-sm leading-relaxed whitespace-pre-wrap">{msg.content}</p>
@@ -121,7 +121,7 @@ const ChatBot = () => {
         </div>
 
         {/* Input */}
-        <div className="p-4 border-t border-slate-600/60 rounded-b-2xl bg-slate-800/90">
+        <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 rounded-b-2xl bg-whitesmoke dark:bg-neutral-900/95">
           <div className="flex gap-2">
             <input
               type="text"
@@ -129,12 +129,12 @@ const ChatBot = () => {
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Ask about alerts, risk, or cases..."
-              className="flex-1 rounded-xl border border-slate-600 bg-slate-700/80 px-4 py-3 text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all"
+              className="flex-1 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-whitesmoke dark:bg-neutral-800 px-4 py-3 text-neutral-900 dark:text-neutral-100 placeholder-neutral-500 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500 transition-all"
             />
             <button
               onClick={handleSend}
               disabled={!inputValue.trim()}
-              className="rounded-xl bg-blue-600 px-4 py-3 text-white font-medium text-sm hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+              className="rounded-xl bg-neutral-800 dark:bg-white text-white dark:text-neutral-900 px-4 py-3 font-medium text-sm hover:bg-neutral-700 dark:hover:bg-neutral-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors focus:outline-none focus:ring-2 focus:ring-neutral-500"
               aria-label="Send message"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -5,9 +5,9 @@ const AlertQueue = ({ alerts }) => {
   const navigate = useNavigate()
   if (!alerts || alerts.length === 0) {
     return (
-      <div className="bg-slate-800/85 backdrop-blur-xl border border-slate-600/50 border-l-4 border-l-blue-500 rounded-2xl p-6 shadow-lg transition-all duration-300 hover:border-slate-500/60">
-        <h3 className="text-lg font-bold text-slate-100 tracking-tight mb-5">Alert Queue</h3>
-        <p className="text-slate-400">No alerts available</p>
+      <div className="bg-whitesmoke dark:bg-neutral-900/95 backdrop-blur-xl border border-neutral-200 dark:border-neutral-700 border-l-4 border-l-neutral-500 dark:border-l-neutral-500 rounded-2xl p-6 shadow-lg transition-all duration-300 hover:border-neutral-300 dark:hover:border-neutral-600">
+        <h3 className="text-lg font-bold text-neutral-900 dark:text-neutral-100 tracking-tight mb-5">Alert Queue</h3>
+        <p className="text-neutral-500 dark:text-neutral-400">No alerts available</p>
       </div>
     )
   }
@@ -32,26 +32,26 @@ const AlertQueue = ({ alerts }) => {
   }
 
   return (
-    <div className="bg-slate-800/85 backdrop-blur-xl border border-slate-600/50 border-l-4 border-l-blue-500 rounded-2xl p-6 shadow-lg transition-all duration-300 hover:border-slate-500/60">
-      <h3 className="text-lg font-bold text-slate-100 tracking-tight mb-5">Alert Queue</h3>
+    <div className="bg-whitesmoke dark:bg-neutral-900/95 backdrop-blur-xl border border-neutral-200 dark:border-neutral-700 border-l-4 border-l-neutral-500 dark:border-l-neutral-500 rounded-2xl p-6 shadow-lg transition-all duration-300 hover:border-neutral-300 dark:hover:border-neutral-600">
+      <h3 className="text-lg font-bold text-neutral-900 dark:text-neutral-100 tracking-tight mb-5">Alert Queue</h3>
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-slate-600">
-              <th className="text-left py-3 px-4 text-slate-400 text-sm font-medium">Risk</th>
-              <th className="text-left py-3 px-4 text-slate-400 text-sm font-medium">Type</th>
-              <th className="text-left py-3 px-4 text-slate-400 text-sm font-medium">Vendor / Entity</th>
-              <th className="text-left py-3 px-4 text-slate-400 text-sm font-medium">Amount</th>
-              <th className="text-left py-3 px-4 text-slate-400 text-sm font-medium">Reason</th>
-              <th className="text-left py-3 px-4 text-slate-400 text-sm font-medium">Status</th>
-              <th className="text-left py-3 px-4 text-slate-400 text-sm font-medium">Actions</th>
+            <tr className="border-b border-neutral-200 dark:border-neutral-600">
+              <th className="text-left py-3 px-4 text-neutral-500 dark:text-neutral-400 text-sm font-medium">Risk</th>
+              <th className="text-left py-3 px-4 text-neutral-500 dark:text-neutral-400 text-sm font-medium">Type</th>
+              <th className="text-left py-3 px-4 text-neutral-500 dark:text-neutral-400 text-sm font-medium">Vendor / Entity</th>
+              <th className="text-left py-3 px-4 text-neutral-500 dark:text-neutral-400 text-sm font-medium">Amount</th>
+              <th className="text-left py-3 px-4 text-neutral-500 dark:text-neutral-400 text-sm font-medium">Reason</th>
+              <th className="text-left py-3 px-4 text-neutral-500 dark:text-neutral-400 text-sm font-medium">Status</th>
+              <th className="text-left py-3 px-4 text-neutral-500 dark:text-neutral-400 text-sm font-medium">Actions</th>
             </tr>
           </thead>
           <tbody>
             {alerts.map((alert) => (
               <tr
                 key={alert.id}
-                className="border-b border-slate-700 hover:bg-slate-700/50 transition-colors duration-200"
+                className="border-b border-neutral-100 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors duration-200"
               >
                 <td className="py-3 px-4">
                   <span
@@ -62,12 +62,12 @@ const AlertQueue = ({ alerts }) => {
                     Risk {alert.riskScore}
                   </span>
                 </td>
-                <td className="py-3 px-4 text-slate-300 text-sm">{alert.type}</td>
-                <td className="py-3 px-4 text-slate-300 text-sm">{alert.vendor}</td>
-                <td className="py-3 px-4 text-slate-300 text-sm">
+                <td className="py-3 px-4 text-neutral-700 dark:text-neutral-300 text-sm">{alert.type}</td>
+                <td className="py-3 px-4 text-neutral-700 dark:text-neutral-300 text-sm">{alert.vendor}</td>
+                <td className="py-3 px-4 text-neutral-700 dark:text-neutral-300 text-sm">
                   {alert.amount ? `$${alert.amount.toLocaleString()}` : '-'}
                 </td>
-                <td className="py-3 px-4 text-slate-300 text-sm">{alert.reason}</td>
+                <td className="py-3 px-4 text-neutral-700 dark:text-neutral-300 text-sm">{alert.reason}</td>
                 <td className="py-3 px-4">
                   <span className={`text-sm font-medium ${getStatusColor(alert.status)}`}>
                     {alert.status}
@@ -78,8 +78,8 @@ const AlertQueue = ({ alerts }) => {
                     onClick={() => navigate(`/report/${alert.id}`)}
                     className={`text-sm font-medium px-3 py-1 rounded-lg transition-all duration-200 hover:scale-105 ${
                       alert.status === 'Escalated'
-                        ? 'bg-rose-500/20 text-rose-300 hover:bg-rose-500/30'
-                        : 'bg-blue-500/20 text-blue-300 hover:bg-blue-500/30'
+                        ? 'bg-rose-500/20 text-rose-600 dark:text-rose-300 hover:bg-rose-500/30'
+                        : 'bg-blue-500/20 text-blue-600 dark:text-blue-300 hover:bg-blue-500/30'
                     }`}
                   >
                     View &gt;
