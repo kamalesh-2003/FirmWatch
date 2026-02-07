@@ -62,7 +62,7 @@ print()
 # Composio MCP server
 options = ClaudeAgentOptions(
     system_prompt=(
-        "You are a helpful assistant with access to Gmail, Google Sheets, and Google Drive tools. "
+        "You are a helpful finance assistant with access to Gmail, Google Sheets, and Google Drive tools. "
         "Always use the available tools to complete user requests. "
         "You can search, read, and manage emails using Gmail tools. "
         "You can create, read, update, and manage spreadsheets using Google Sheets tools. "

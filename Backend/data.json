@@ -1,0 +1,99 @@
+{
+  "summary": {
+    "totalInvoices": 2,
+    "highRiskAlerts": 2,
+    "flaggedAmount": 0,
+    "casesResolved": 0
+  },
+  "alerts": [
+    {
+      "id": "alert-49fb157e",
+      "emailId": "19c37afca062468b",
+      "riskScore": 95,
+      "riskLevel": "HIGH",
+      "type": "Invoice",
+      "vendor": "nitin anumula",
+      "amount": null,
+      "reason": "Suspicious invoice with nonsensical content, personal email domain, and future date",
+      "flags": [
+        "Personal email domain",
+        "No invoice details",
+        "Gibberish content",
+        "Future date",
+        "Missing amount"
+      ],
+      "summary": "This email appears highly suspicious as it claims to be an invoice but contains only gibberish text 'erripu.' with no legitimate invoice information. The sender uses a personal Gmail account rather than a business domain, and the email is dated in the future (2026), which suggests potential system manipulation or fraud.",
+      "factors": [
+        {
+          "id": "factor-a944b5",
+          "title": "Personal Email Domain",
+          "severity": "high",
+          "description": "Sender uses Gmail personal account instead of business domain for invoice"
+        },
+        {
+          "id": "factor-5e89d2",
+          "title": "Nonsensical Content",
+          "severity": "high",
+          "description": "Email body contains only gibberish text 'erripu.' with no invoice information"
+        },
+        {
+          "id": "factor-19b408",
+          "title": "Future Date",
+          "severity": "medium",
+          "description": "Email dated February 2026, which is in the future and suspicious"
+        },
+        {
+          "id": "factor-e19052",
+          "title": "Missing Invoice Details",
+          "severity": "high",
+          "description": "No amount, invoice number, company details, or payment information provided"
+        }
+      ],
+      "status": "New Alert",
+      "date": "2026-02-07T19:01:46.689508"
+    },
+    {
+      "id": "alert-818230e9",
+      "emailId": "19c398933c30ec58",
+      "riskScore": 85,
+      "riskLevel": "HIGH",
+      "type": "Invoice",
+      "vendor": "Nithin Anumula",
+      "amount": null,
+      "reason": "Extremely vague invoice content with no legitimate business details or financial information",
+      "flags": [
+        "vague_content",
+        "missing_invoice_details",
+        "no_amount_specified",
+        "unprofessional_format"
+      ],
+      "summary": "This email claims to be an invoice but contains only 'demo 1' as content with no financial details, amounts, or business information. The lack of any legitimate invoice elements combined with the unprofessional presentation suggests this is likely fraudulent or a test/spam message.",
+      "factors": [
+        {
+          "id": "factor-658627",
+          "title": "Missing Invoice Details",
+          "severity": "high",
+          "description": "No invoice number, amount, services, dates, or payment terms provided"
+        },
+        {
+          "id": "factor-9cee9d",
+          "title": "Vague Content",
+          "severity": "high",
+          "description": "Body contains only 'demo 1' which provides no legitimate business context"
+        },
+        {
+          "id": "factor-740ec2",
+          "title": "Unprofessional Format",
+          "severity": "medium",
+          "description": "Legitimate invoices contain structured financial and business information"
+        }
+      ],
+      "status": "New Alert",
+      "date": "2026-02-07T19:17:53.979329"
+    }
+  ],
+  "processed_email_ids": [
+    "19c37afca062468b",
+    "19c398933c30ec58"
+  ]
+}

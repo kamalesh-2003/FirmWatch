@@ -3,3 +3,9 @@ langchain
 langchain-openai
 langchain-mcp-adapters
 python-dotenv
+fastapi
+uvicorn
+httpx
+pydantic
+pdfplumber
+python-multipart

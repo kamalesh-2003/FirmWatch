@@ -29,6 +29,7 @@ export function useDashboardData() {
   })
 
   const [syncing, setSyncing] = useState(false)
+  const [uploading, setUploading] = useState(false)
 
   useEffect(() => {
     loadDashboardData()
@@ -83,8 +84,7 @@ export function useDashboardData() {
     try {
       setSyncing(true)
       const result = await api.syncEmail()
-      // Optionally reload data after sync
-      // await loadDashboardData()
+      await loadDashboardData()
       return result
     } catch (error) {
       throw error
@@ -93,10 +93,23 @@ export function useDashboardData() {
     }
   }
 
+  const uploadStatement = async (file: File) => {
+    try {
+      setUploading(true)
+      const result = await api.uploadStatement(file)
+      await loadDashboardData()
+      return result
+    } finally {
+      setUploading(false)
+    }
+  }
+
   return {
     ...data,
     syncing,
+    uploading,
     syncEmail,
+    uploadStatement,
     refresh: loadDashboardData,
   }
 }
