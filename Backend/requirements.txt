@@ -3,3 +3,8 @@ langchain
 langchain-openai
 langchain-mcp-adapters
 python-dotenv
+flask
+flask-cors
+google-api-python-client
+google-auth
+google-auth-oauthlib

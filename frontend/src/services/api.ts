@@ -74,6 +74,37 @@ export interface ReportAnalysis {
   similarCases: Array<{ caseId: string; status: string }>
 }
 
+export interface DemoPayment {
+  id: string
+  vendor: string
+  amount: number
+  currency: string
+  status: 'Processing' | 'HOLD' | 'Approved' | 'Escalated'
+}
+
+export interface StatementAnalysis {
+  risk: 'HIGH' | 'MEDIUM' | 'LOW'
+  status: 'Processing' | 'HOLD'
+  vendor: string
+  amount: number
+  currency: string
+  reasons: string[]
+}
+
+export interface StatementUploadResult {
+  success: boolean
+  message: string
+  driveFileId?: string
+  driveViewLink?: string
+  analysis?: StatementAnalysis
+}
+
+export interface DriveAuthStatus {
+  authorized: boolean
+}
+
+const API_BASE_URL = 'http://127.0.0.1:5000'
+
 export const api = {
   async getDashboardSummary(): Promise<DashboardSummary> {
     await new Promise(resolve => setTimeout(resolve, 300))
@@ -151,13 +182,44 @@ export const api = {
     }
   },
 
-  async uploadPdf(file: File): Promise<{ success: boolean; message: string; id?: string }> {
-    await new Promise(resolve => setTimeout(resolve, 1200))
+  async getStripeTestPayment(): Promise<DemoPayment> {
+    await new Promise(resolve => setTimeout(resolve, 300))
     return {
-      success: true,
-      message: `PDF "${file.name}" uploaded successfully. It will be processed and appear in the alert queue.`,
-      id: `upload-${Date.now()}`,
+      id: 'pi_test_3P6e3W2eZvKYlo2C9sTQ_demo',
+      vendor: 'Apex Logistics',
+      amount: 48900,
+      currency: 'USD',
+      status: 'Processing',
     }
+  },
+
+  async uploadPdf(file: File): Promise<StatementUploadResult> {
+    const formData = new FormData()
+    formData.append('file', file)
+
+    const res = await fetch(`${API_BASE_URL}/upload-statement`, {
+      method: 'POST',
+      body: formData,
+    })
+
+    if (!res.ok) {
+      const errorBody = await res.json().catch(() => ({}))
+      throw new Error(errorBody?.error || 'Failed to upload statement')
+    }
+
+    return res.json()
+  },
+
+  async getDriveAuthStatus(): Promise<DriveAuthStatus> {
+    const res = await fetch(`${API_BASE_URL}/auth/google-drive/status`)
+    if (!res.ok) {
+      return { authorized: false }
+    }
+    return res.json()
+  },
+
+  getDriveAuthUrl(): string {
+    return `${API_BASE_URL}/auth/google-drive`
   },
 }
 

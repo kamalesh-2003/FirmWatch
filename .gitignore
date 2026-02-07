@@ -2,3 +2,7 @@
 __pycache__/
 *.pyc
 .venv/
+Backend/oauth-client.json
+Backend/drive_oauth_token.json
+Backend/service-account.json
+Backend/.env
