@@ -91,6 +91,37 @@ export interface ReportAnalysis {
   similarCases: Array<{ caseId: string; status: string }>
 }
 
+export interface DemoPayment {
+  id: string
+  vendor: string
+  amount: number
+  currency: string
+  status: 'Processing' | 'HOLD' | 'Approved' | 'Escalated'
+}
+
+export interface StatementAnalysis {
+  risk: 'HIGH' | 'MEDIUM' | 'LOW'
+  status: 'Processing' | 'HOLD'
+  vendor: string
+  amount: number
+  currency: string
+  reasons: string[]
+}
+
+export interface StatementUploadResult {
+  success: boolean
+  message: string
+  driveFileId?: string
+  driveViewLink?: string
+  analysis?: StatementAnalysis
+}
+
+export interface DriveAuthStatus {
+  authorized: boolean
+}
+
+const API_BASE_URL = 'http://127.0.0.1:5000'
+
 export const api = {
   async getDashboardSummary(): Promise<DashboardSummary> {
     const res = await fetch('/api/dashboard/summary')
