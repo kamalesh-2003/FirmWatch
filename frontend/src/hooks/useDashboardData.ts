@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { api, DashboardSummary, Alert, RiskDistribution, AlertTimeSeries, Anomaly, InvestigationCase, PatternInsight, TopRiskVendor } from '../services/api'
+import { api, DashboardSummary, Alert, RiskDistribution, AlertTimeSeries, Anomaly, InvestigationCase, PatternInsight, TopRiskVendor, StatementMonth } from '../services/api'
 
 export interface DashboardData {
   summary: DashboardSummary | null
@@ -10,6 +10,7 @@ export interface DashboardData {
   investigationCase: InvestigationCase | null
   patternInsights: PatternInsight[]
   topRiskVendors: TopRiskVendor[]
+  statements: Record<number, StatementMonth>
   loading: boolean
   error: string | null
 }
@@ -24,11 +25,13 @@ export function useDashboardData() {
     investigationCase: null,
     patternInsights: [],
     topRiskVendors: [],
+    statements: {},
     loading: true,
     error: null,
   })
 
   const [syncing, setSyncing] = useState(false)
+  const [uploading, setUploading] = useState(false)
 
   useEffect(() => {
     loadDashboardData()
@@ -47,6 +50,7 @@ export function useDashboardData() {
         investigationCase,
         patternInsights,
         topRiskVendors,
+        statements,
       ] = await Promise.all([
         api.getDashboardSummary(),
         api.getAlerts(),
@@ -56,6 +60,7 @@ export function useDashboardData() {
         api.getInvestigationCase(),
         api.getPatternInsights(),
         api.getTopRiskVendors(),
+        api.getStatements(),
       ])
 
       setData({
@@ -67,6 +72,7 @@ export function useDashboardData() {
         investigationCase,
         patternInsights,
         topRiskVendors,
+        statements,
         loading: false,
         error: null,
       })
@@ -83,8 +89,7 @@ export function useDashboardData() {
     try {
       setSyncing(true)
       const result = await api.syncEmail()
-      // Optionally reload data after sync
-      // await loadDashboardData()
+      await loadDashboardData()
       return result
     } catch (error) {
       throw error
@@ -93,10 +98,23 @@ export function useDashboardData() {
     }
   }
 
+  const uploadStatement = async (file: File) => {
+    try {
+      setUploading(true)
+      const result = await api.uploadStatement(file)
+      await loadDashboardData()
+      return result
+    } finally {
+      setUploading(false)
+    }
+  }
+
   return {
     ...data,
     syncing,
+    uploading,
     syncEmail,
+    uploadStatement,
     refresh: loadDashboardData,
   }
 }

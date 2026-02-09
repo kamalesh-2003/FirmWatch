@@ -1,0 +1,37 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir:*)",
+      "Bash(find:*)",
+      "Bash(.venvScriptspip install fastapi uvicorn httpx pydantic)",
+      "Bash(.venv/Scripts/pip install:*)",
+      "Bash(curl:*)",
+      "Bash(...venvScriptspip install pdfplumber python-multipart)",
+      "Bash(C:/Users/Kamalesh/firwatch-tools/.venv/Scripts/pip install:*)",
+      "Bash(git -C \"C:/Users/Kamalesh/firwatch-tools\" add \"frontend/src/components/tables/AlertQueue.jsx\" \"frontend/src/pages/Dashboard.jsx\")",
+      "Bash(git -C \"C:/Users/Kamalesh/firwatch-tools\" commit -m \"$\\(cat <<''EOF''\nMerge frontend branch into main\n\nResolves conflicts keeping dark mode styling from main with\nalert queue toggle tabs and PDF upload features from frontend.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git -C \"C:/Users/Kamalesh/firwatch-tools\" log --oneline -5)",
+      "Bash(git -C \"C:/Users/Kamalesh/firwatch-tools\" stash pop)",
+      "Bash(git -C \"C:/Users/Kamalesh/firwatch-tools\" fetch origin main)",
+      "Bash(git -C \"C:/Users/Kamalesh/firwatch-tools\" log --oneline origin/main -10)",
+      "Bash(git -C \"C:/Users/Kamalesh/firwatch-tools\" log --oneline HEAD -10)",
+      "Bash(git -C \"C:/Users/Kamalesh/firwatch-tools\" diff --stat HEAD..origin/main -- Backend/)",
+      "Bash(git -C \"C:/Users/Kamalesh/firwatch-tools\" diff --stat HEAD..origin/main)",
+      "Bash(git -C \"C:/Users/Kamalesh/firwatch-tools\" show origin/main:Backend/server.py)",
+      "Bash(git -C \"C:/Users/Kamalesh/firwatch-tools\" show origin/main:Backend/storage.py)",
+      "Bash(git -C \"C:/Users/Kamalesh/firwatch-tools\" show origin/main:Backend/requirements.txt)",
+      "Bash(git -C \"C:/Users/Kamalesh/firwatch-tools\" show origin/main:Backend/drive_upload.py)",
+      "Bash(C:UsersKamaleshfirwatch-tools.venvScriptspython.exe -c \"import pdfplumber; print\\(''pdfplumber available''\\)\")",
+      "Bash(\"C:\\\\Users\\\\Kamalesh\\\\firwatch-tools\\\\.venv\\\\Scripts\\\\python.exe\" -c \"import pdfplumber; print\\(''pdfplumber available''\\)\")",
+      "Bash(\"C:\\\\Users\\\\Kamalesh\\\\firwatch-tools\\\\.venv\\\\Scripts\\\\pip.exe\" install pdfplumber)",
+      "Bash(\"C:\\\\Users\\\\Kamalesh\\\\firwatch-tools\\\\.venv\\\\Scripts\\\\python.exe\" -c \"\nimport pdfplumber\n\nfor fname in [''statement_month_1.pdf'', ''statement_month_6.pdf'']:\n    path = r''C:\\\\Users\\\\Kamalesh\\\\firwatch-tools\\\\'' + fname\n    print\\(''='' * 80\\)\n    print\\(f''FILE: {fname}''\\)\n    print\\(''='' * 80\\)\n    with pdfplumber.open\\(path\\) as pdf:\n        for i, page in enumerate\\(pdf.pages\\):\n            text = page.extract_text\\(\\)\n            print\\(f''--- Page {i+1} ---''\\)\n            print\\(text\\)\n            print\\(\\)\n    print\\(\\)\n\")",
+      "Bash(\"C:\\\\Users\\\\Kamalesh\\\\firwatch-tools\\\\_extract_pdf.py\" << 'PYEOF'\nimport pdfplumber\nimport os\n\nbase = r\"C:\\\\Users\\\\Kamalesh\\\\firwatch-tools\"\n\nfor fname in [\"statement_month_1.pdf\", \"statement_month_6.pdf\"]:\n    path = os.path.join\\(base, fname\\)\n    print\\(\"=\" * 80\\)\n    print\\(f\"FILE: {fname}\"\\)\n    print\\(\"=\" * 80\\)\n    with pdfplumber.open\\(path\\) as pdf:\n        for i, page in enumerate\\(pdf.pages\\):\n            text = page.extract_text\\(\\)\n            print\\(f\"--- Page {i+1} ---\"\\)\n            print\\(text\\)\n            print\\(\\)\n    print\\(\\)\nPYEOF)",
+      "Bash(\"C:\\\\Users\\\\Kamalesh\\\\firwatch-tools\\\\.venv\\\\Scripts\\\\python.exe\":*)",
+      "Bash(\"C:\\\\Users\\\\Kamalesh\\\\firwatch-tools\\\\.venv\\\\Scripts\\\\python.exe\" -c \"import sys; print\\(sys.executable\\); print\\(sys.prefix\\)\")",
+      "Bash(\"C:\\\\Users\\\\Kamalesh\\\\firwatch-tools\\\\.venv\\\\Scripts\\\\python.exe\" -m pip install pdfplumber)",
+      "Bash(.venv\\\\Scripts\\\\python.exe:*)",
+      "Bash(C:UsersKamaleshfirwatch-tools.venvScriptspython.exe -c \"import sys; sys.path.insert\\(0, r''C:\\\\Users\\\\Kamalesh\\\\firwatch-tools\\\\Backend''\\); from server import parse_all_statements; import json; result = parse_all_statements\\(\\); [print\\(f''Month {result[k][\"\"month\"\"]} \\({result[k][\"\"label\"\"]}\\): {result[k][\"\"period\"\"]}, Open: {result[k][\"\"openingBalance\"\"]}, Close: {result[k][\"\"closingBalance\"\"]}, Txns: {len\\(result[k][\"\"transactions\"\"]\\)}''\\) for k in sorted\\(result.keys\\(\\), key=int\\)]\")",
+      "Bash(.venv/Scripts/python.exe:*)"
+    ]
+  }
+}

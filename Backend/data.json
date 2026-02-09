@@ -1,0 +1,657 @@
+{
+  "summary": {
+    "totalInvoices": 16,
+    "highRiskAlerts": 16,
+    "flaggedAmount": 135054.0,
+    "casesResolved": 0
+  },
+  "alerts": [
+    {
+      "id": "alert-49fb157e",
+      "emailId": "19c37afca062468b",
+      "riskScore": 95,
+      "riskLevel": "HIGH",
+      "type": "Invoice",
+      "vendor": "nitin anumula",
+      "amount": null,
+      "reason": "Suspicious invoice with nonsensical content, personal email domain, and future date",
+      "flags": [
+        "Personal email domain",
+        "No invoice details",
+        "Gibberish content",
+        "Future date",
+        "Missing amount"
+      ],
+      "summary": "This email appears highly suspicious as it claims to be an invoice but contains only gibberish text 'erripu.' with no legitimate invoice information. The sender uses a personal Gmail account rather than a business domain, and the email is dated in the future (2026), which suggests potential system manipulation or fraud.",
+      "factors": [
+        {
+          "id": "factor-a944b5",
+          "title": "Personal Email Domain",
+          "severity": "high",
+          "description": "Sender uses Gmail personal account instead of business domain for invoice"
+        },
+        {
+          "id": "factor-5e89d2",
+          "title": "Nonsensical Content",
+          "severity": "high",
+          "description": "Email body contains only gibberish text 'erripu.' with no invoice information"
+        },
+        {
+          "id": "factor-19b408",
+          "title": "Future Date",
+          "severity": "medium",
+          "description": "Email dated February 2026, which is in the future and suspicious"
+        },
+        {
+          "id": "factor-e19052",
+          "title": "Missing Invoice Details",
+          "severity": "high",
+          "description": "No amount, invoice number, company details, or payment information provided"
+        }
+      ],
+      "status": "New Alert",
+      "date": "2026-02-07T19:01:46.689508"
+    },
+    {
+      "id": "alert-818230e9",
+      "emailId": "19c398933c30ec58",
+      "riskScore": 85,
+      "riskLevel": "HIGH",
+      "type": "Invoice",
+      "vendor": "Nithin Anumula",
+      "amount": null,
+      "reason": "Extremely vague invoice content with no legitimate business details or financial information",
+      "flags": [
+        "vague_content",
+        "missing_invoice_details",
+        "no_amount_specified",
+        "unprofessional_format"
+      ],
+      "summary": "This email claims to be an invoice but contains only 'demo 1' as content with no financial details, amounts, or business information. The lack of any legitimate invoice elements combined with the unprofessional presentation suggests this is likely fraudulent or a test/spam message.",
+      "factors": [
+        {
+          "id": "factor-658627",
+          "title": "Missing Invoice Details",
+          "severity": "high",
+          "description": "No invoice number, amount, services, dates, or payment terms provided"
+        },
+        {
+          "id": "factor-9cee9d",
+          "title": "Vague Content",
+          "severity": "high",
+          "description": "Body contains only 'demo 1' which provides no legitimate business context"
+        },
+        {
+          "id": "factor-740ec2",
+          "title": "Unprofessional Format",
+          "severity": "medium",
+          "description": "Legitimate invoices contain structured financial and business information"
+        }
+      ],
+      "status": "New Alert",
+      "date": "2026-02-07T19:17:53.979329"
+    },
+    {
+      "id": "alert-1715a537",
+      "riskScore": 85,
+      "riskLevel": "HIGH",
+      "type": "Transaction",
+      "vendor": "Unknown",
+      "amount": null,
+      "reason": "Document contains heavily corrupted or encoded text that obscures financial data",
+      "flags": [
+        "data_corruption",
+        "potential_obfuscation",
+        "unreadable_content"
+      ],
+      "summary": "The income statement text appears to be severely corrupted with encoding issues, making most financial data unreadable. This level of corruption could indicate intentional obfuscation of financial information or data tampering. The document structure suggests it may be a legitimate financial statement, but the garbled text prevents proper analysis of transactions and amounts.",
+      "factors": [
+        {
+          "id": "factor-90577f",
+          "title": "Text Corruption/Encoding Issues",
+          "severity": "high",
+          "description": "Majority of the document contains unreadable encoded characters that prevent analysis of financial data"
+        },
+        {
+          "id": "factor-d7052f",
+          "title": "Potential Data Obfuscation",
+          "severity": "high",
+          "description": "The level of corruption may indicate intentional attempts to hide or obscure financial information"
+        },
+        {
+          "id": "factor-797d2b",
+          "title": "Incomplete Financial Information",
+          "severity": "medium",
+          "description": "Unable to extract specific transaction amounts, vendor names, or expense categories for proper fraud analysis"
+        }
+      ],
+      "status": "New Alert",
+      "date": "2026-02-07T22:01:41.436224",
+      "source": "tripinvoice.pdf"
+    },
+    {
+      "id": "alert-44943dc9",
+      "emailId": "19c3a23eaacd901c",
+      "riskScore": 85,
+      "riskLevel": "HIGH",
+      "type": "Invoice",
+      "vendor": "Nithin Anumula",
+      "amount": null,
+      "reason": "Extremely minimal content for an invoice with no financial details or legitimate business information",
+      "flags": [
+        "minimal_content",
+        "missing_invoice_details",
+        "suspicious_simplicity",
+        "no_amount_specified"
+      ],
+      "summary": "This email claims to be an invoice but contains only 'Hi' as the body content with no financial information, vendor details, or legitimate invoice components. The extreme lack of content combined with the invoice subject line suggests potential fraudulent intent or phishing attempt.",
+      "factors": [
+        {
+          "id": "factor-5a6357",
+          "title": "Missing Invoice Content",
+          "severity": "high",
+          "description": "Email subject claims to be an invoice but body contains only 'Hi' with no financial details, amounts, or business information"
+        },
+        {
+          "id": "factor-1210ce",
+          "title": "Suspicious Simplicity",
+          "severity": "high",
+          "description": "Legitimate invoices contain detailed information about services, amounts, and payment terms - this email has none"
+        },
+        {
+          "id": "factor-94095d",
+          "title": "Potential Phishing Attempt",
+          "severity": "medium",
+          "description": "The mismatch between subject line and content suggests an attempt to get recipients to respond or engage"
+        }
+      ],
+      "status": "New Alert",
+      "date": "2026-02-07T22:06:00.271299"
+    },
+    {
+      "id": "alert-591a4bfd",
+      "emailId": "19c3a4cb93c5c41f",
+      "riskScore": 85,
+      "riskLevel": "HIGH",
+      "type": "Invoice",
+      "vendor": "Nithin Anumula",
+      "amount": null,
+      "reason": "Extremely minimal content with no invoice details and suspicious future date",
+      "flags": [
+        "future_date",
+        "minimal_content",
+        "no_invoice_details",
+        "suspicious_body_content"
+      ],
+      "summary": "This email claims to be an invoice but contains only the word 'demo' as content with no financial details, amounts, or legitimate invoice information. The future date of 2026 and complete lack of invoice structure are major red flags indicating potential fraud.",
+      "factors": [
+        {
+          "id": "factor-3dbc7b",
+          "title": "Future Date Anomaly",
+          "severity": "high",
+          "description": "Email dated February 2026, which is in the future and highly suspicious"
+        },
+        {
+          "id": "factor-ae7f43",
+          "title": "Minimal Content",
+          "severity": "high",
+          "description": "Email body contains only 'demo' with no invoice details, amounts, or business information"
+        },
+        {
+          "id": "factor-c34110",
+          "title": "Missing Invoice Elements",
+          "severity": "high",
+          "description": "Lacks all standard invoice components like amounts, services, dates, payment terms"
+        },
+        {
+          "id": "factor-666cee",
+          "title": "Generic Subject Line",
+          "severity": "medium",
+          "description": "Subject line is simply 'invoice' without any identifying information or invoice number"
+        }
+      ],
+      "status": "New Alert",
+      "date": "2026-02-07T22:50:52.453678"
+    },
+    {
+      "id": "alert-c94721fc",
+      "emailId": "19c3a870d986f533",
+      "riskScore": 85,
+      "riskLevel": "HIGH",
+      "type": "Invoice",
+      "vendor": "Nithin Anumula",
+      "amount": null,
+      "reason": "Extremely minimal content with no invoice details and suspicious timing",
+      "flags": [
+        "minimal_content",
+        "no_invoice_details",
+        "future_date",
+        "vague_subject",
+        "no_amount"
+      ],
+      "summary": "This email claims to be an invoice but contains only the word 'demo' as content, with no legitimate invoice information such as amounts, services, or company details. The future date and minimal effort suggest this is likely a test or fraudulent attempt.",
+      "factors": [
+        {
+          "id": "factor-da99e1",
+          "title": "Minimal Content",
+          "severity": "high",
+          "description": "Email body contains only 'demo' with no actual invoice information"
+        },
+        {
+          "id": "factor-fe9157",
+          "title": "Missing Invoice Elements",
+          "severity": "high",
+          "description": "No amount, services, company details, or other standard invoice components"
+        },
+        {
+          "id": "factor-4bcbff",
+          "title": "Future Date",
+          "severity": "medium",
+          "description": "Email dated in 2026, which is suspicious for current transactions"
+        },
+        {
+          "id": "factor-f99a9d",
+          "title": "Generic Subject",
+          "severity": "medium",
+          "description": "Subject line is simply 'invoice' without specifics or reference numbers"
+        }
+      ],
+      "status": "New Alert",
+      "date": "2026-02-07T23:54:30.642630"
+    },
+    {
+      "id": "alert-9b4bcb5c",
+      "emailId": "19c3a9c7dce6b1e0",
+      "riskScore": 85,
+      "riskLevel": "HIGH",
+      "type": "Invoice",
+      "vendor": "Nithin Anumula",
+      "amount": null,
+      "reason": "Extremely minimal content with no invoice details and suspicious future date",
+      "flags": [
+        "future_date",
+        "minimal_content",
+        "no_invoice_details",
+        "suspicious_body_content"
+      ],
+      "summary": "This email claims to be an invoice but contains only the word 'demo' as content with no financial details, amounts, or legitimate invoice information. The future date of 2026 and complete lack of invoice elements strongly suggest fraudulent intent.",
+      "factors": [
+        {
+          "id": "factor-bdffa5",
+          "title": "Future Date Anomaly",
+          "severity": "high",
+          "description": "Email dated February 8, 2026, which is in the future and highly suspicious"
+        },
+        {
+          "id": "factor-2e9932",
+          "title": "Minimal Content",
+          "severity": "high",
+          "description": "Email body contains only 'demo' with no invoice details, amounts, or business information"
+        },
+        {
+          "id": "factor-ae614e",
+          "title": "Missing Invoice Elements",
+          "severity": "high",
+          "description": "No invoice number, amount, due date, company details, or payment instructions present"
+        },
+        {
+          "id": "factor-243ebc",
+          "title": "Generic Subject Line",
+          "severity": "medium",
+          "description": "Subject line is simply 'invoice' without any identifying information or specifics"
+        }
+      ],
+      "status": "New Alert",
+      "date": "2026-02-08T00:20:44.359546"
+    },
+    {
+      "id": "alert-be7ca704",
+      "riskScore": 85,
+      "riskLevel": "HIGH",
+      "type": "Transaction",
+      "vendor": "OFFSHORE SERVICES LTD",
+      "amount": 15000.0,
+      "reason": "Large international wire transfer to offshore entity never seen in baseline",
+      "flags": [
+        "offshore_wire_transfer",
+        "new_vendor",
+        "spending_spike"
+      ],
+      "summary": "A $15,000 wire transfer to Cayman Islands entity 'OFFSHORE SERVICES LTD' represents a completely new transaction type and vendor not seen in 5 months of baseline operations. This offshore transfer is highly suspicious for a domestic Australian business.",
+      "factors": [
+        {
+          "id": "factor-038c54",
+          "title": "Offshore Wire Transfer",
+          "severity": "high",
+          "description": "No international wire transfers occurred in baseline months 1-5, making this Cayman Islands transfer highly anomalous"
+        },
+        {
+          "id": "factor-55b31a",
+          "title": "New Vendor",
+          "severity": "high",
+          "description": "OFFSHORE SERVICES LTD never appeared in baseline period transactions"
+        },
+        {
+          "id": "factor-0d8210",
+          "title": "Large Amount",
+          "severity": "medium",
+          "description": "$15,000 represents a significant single transaction compared to typical business expenses"
+        }
+      ],
+      "status": "New Alert",
+      "date": "03 Jun",
+      "source": "statement_analysis"
+    },
+    {
+      "id": "alert-81cf06db",
+      "riskScore": 90,
+      "riskLevel": "HIGH",
+      "type": "Transaction",
+      "vendor": "COINBASE AUSTRALIA",
+      "amount": 8750.0,
+      "reason": "Cryptocurrency exchange purchase - completely new transaction type",
+      "flags": [
+        "cryptocurrency_exchange",
+        "new_vendor",
+        "spending_spike"
+      ],
+      "summary": "An $8,750 purchase from COINBASE AUSTRALIA represents the first cryptocurrency transaction in the company's history. No crypto exchanges appeared in the 5-month baseline period.",
+      "factors": [
+        {
+          "id": "factor-642c02",
+          "title": "Cryptocurrency Exchange",
+          "severity": "high",
+          "description": "No cryptocurrency transactions occurred in baseline months 1-5"
+        },
+        {
+          "id": "factor-ddb1d5",
+          "title": "New Vendor",
+          "severity": "high",
+          "description": "COINBASE AUSTRALIA never appeared in baseline transactions"
+        },
+        {
+          "id": "factor-baa881",
+          "title": "Large Amount",
+          "severity": "medium",
+          "description": "$8,750 is a substantial amount for an unauthorized transaction type"
+        }
+      ],
+      "status": "New Alert",
+      "date": "06 Jun",
+      "source": "statement_analysis"
+    },
+    {
+      "id": "alert-566a58da",
+      "riskScore": 95,
+      "riskLevel": "HIGH",
+      "type": "Transaction",
+      "vendor": "ATM WITHDRAWALS",
+      "amount": 6000.0,
+      "reason": "Structured ATM withdrawals - three $2,000 withdrawals within 68 minutes",
+      "flags": [
+        "atm_structuring",
+        "spending_spike"
+      ],
+      "summary": "Three identical $2,000 ATM withdrawals occurred on June 8th between 08:15-09:23 at different locations (Melbourne CBD, Southbank, Docklands). This pattern suggests deliberate structuring to avoid reporting thresholds.",
+      "factors": [
+        {
+          "id": "factor-c409fd",
+          "title": "Structuring Pattern",
+          "severity": "high",
+          "description": "Three identical $2,000 withdrawals within 68 minutes at different ATMs suggests deliberate structuring"
+        },
+        {
+          "id": "factor-ed7936",
+          "title": "No Historical ATM Usage",
+          "severity": "high",
+          "description": "No ATM withdrawals occurred in baseline months 1-5"
+        },
+        {
+          "id": "factor-7399ec",
+          "title": "Large Total Amount",
+          "severity": "medium",
+          "description": "$6,000 total cash withdrawal is unusual for business operations"
+        }
+      ],
+      "status": "New Alert",
+      "date": "08 Jun",
+      "source": "statement_analysis"
+    },
+    {
+      "id": "alert-739d4c39",
+      "riskScore": 88,
+      "riskLevel": "HIGH",
+      "type": "Transaction",
+      "vendor": "TIFFANY & CO",
+      "amount": 6890.0,
+      "reason": "Luxury jewelry purchase at Tiffany & Co - personal spending on business account",
+      "flags": [
+        "luxury_goods",
+        "new_vendor",
+        "spending_spike"
+      ],
+      "summary": "A $6,890 purchase at TIFFANY & CO represents luxury personal spending on a business account. No jewelry or luxury goods purchases appeared in the 5-month baseline period.",
+      "factors": [
+        {
+          "id": "factor-289b65",
+          "title": "Luxury Goods Purchase",
+          "severity": "high",
+          "description": "Jewelry purchases are inappropriate for business accounts and never occurred in baseline"
+        },
+        {
+          "id": "factor-4f8c96",
+          "title": "New Vendor",
+          "severity": "high",
+          "description": "TIFFANY & CO never appeared in baseline transactions"
+        },
+        {
+          "id": "factor-c286df",
+          "title": "Personal vs Business Expense",
+          "severity": "high",
+          "description": "Luxury jewelry is clearly personal spending, not legitimate business expense"
+        }
+      ],
+      "status": "New Alert",
+      "date": "09 Jun",
+      "source": "statement_analysis"
+    },
+    {
+      "id": "alert-043f9f9a",
+      "riskScore": 85,
+      "riskLevel": "HIGH",
+      "type": "Transaction",
+      "vendor": "FLIGHT CENTRE",
+      "amount": 8950.0,
+      "reason": "International flight booking - new expense type suggesting personal travel",
+      "flags": [
+        "new_vendor",
+        "spending_spike",
+        "personal_spending"
+      ],
+      "summary": "An $8,950 international flight booking to Paris, France through FLIGHT CENTRE represents a new expense type. No travel bookings appeared in the 5-month baseline period.",
+      "factors": [
+        {
+          "id": "factor-756da9",
+          "title": "International Travel",
+          "severity": "high",
+          "description": "No travel expenses occurred in baseline months 1-5"
+        },
+        {
+          "id": "factor-91638e",
+          "title": "New Vendor",
+          "severity": "high",
+          "description": "FLIGHT CENTRE never appeared in baseline transactions"
+        },
+        {
+          "id": "factor-cb04b4",
+          "title": "Personal Travel Indicator",
+          "severity": "medium",
+          "description": "Paris destination suggests personal rather than business travel"
+        }
+      ],
+      "status": "New Alert",
+      "date": "12 Jun",
+      "source": "statement_analysis"
+    },
+    {
+      "id": "alert-98df4330",
+      "riskScore": 92,
+      "riskLevel": "HIGH",
+      "type": "Transaction",
+      "vendor": "BINANCE AUSTRALIA",
+      "amount": 12500.0,
+      "reason": "Second cryptocurrency exchange purchase - pattern of unauthorized crypto trading",
+      "flags": [
+        "cryptocurrency_exchange",
+        "new_vendor",
+        "spending_spike"
+      ],
+      "summary": "A $12,500 purchase from BINANCE AUSTRALIA represents the second cryptocurrency transaction in June. Combined with the Coinbase purchase, this shows a pattern of unauthorized crypto trading totaling $21,250.",
+      "factors": [
+        {
+          "id": "factor-76ff60",
+          "title": "Cryptocurrency Exchange",
+          "severity": "high",
+          "description": "No cryptocurrency transactions occurred in baseline months 1-5"
+        },
+        {
+          "id": "factor-54c1f0",
+          "title": "Pattern of Crypto Trading",
+          "severity": "high",
+          "description": "Second crypto exchange purchase in June, showing systematic unauthorized trading"
+        },
+        {
+          "id": "factor-105ce5",
+          "title": "Large Amount",
+          "severity": "high",
+          "description": "$12,500 is the largest single crypto purchase"
+        }
+      ],
+      "status": "New Alert",
+      "date": "15 Jun",
+      "source": "statement_analysis"
+    },
+    {
+      "id": "alert-988ec705",
+      "riskScore": 95,
+      "riskLevel": "HIGH",
+      "type": "Transaction",
+      "vendor": "R D GEE - PERSONAL SAVINGS",
+      "amount": 10000.0,
+      "reason": "Transfer to personal account - clear embezzlement indicator",
+      "flags": [
+        "personal_account_transfer",
+        "embezzlement",
+        "new_payee"
+      ],
+      "summary": "A $10,000 transfer to external personal account 'R D GEE - PERSONAL SAVINGS' represents clear embezzlement. No transfers to personal accounts occurred in the 5-month baseline period.",
+      "factors": [
+        {
+          "id": "factor-873746",
+          "title": "Personal Account Transfer",
+          "severity": "high",
+          "description": "Transfer explicitly labeled as 'PERSONAL SAVINGS' indicates embezzlement"
+        },
+        {
+          "id": "factor-4f3524",
+          "title": "New Payee",
+          "severity": "high",
+          "description": "R D GEE never appeared as a payee in baseline months 1-5"
+        },
+        {
+          "id": "factor-dd48ea",
+          "title": "Large Amount",
+          "severity": "high",
+          "description": "$10,000 represents a substantial unauthorized transfer"
+        }
+      ],
+      "status": "New Alert",
+      "date": "17 Jun",
+      "source": "statement_analysis"
+    },
+    {
+      "id": "alert-1cdb077e",
+      "riskScore": 100,
+      "riskLevel": "HIGH",
+      "type": "Transaction",
+      "vendor": "ACCOUNT OVERDRAFT",
+      "amount": 58192.0,
+      "reason": "Account overdraft - balance went severely negative due to fraudulent activity",
+      "flags": [
+        "account_overdraft",
+        "negative_balance"
+      ],
+      "summary": "The account balance went from positive $11,530.20 to negative $58,192.00, representing a $69,722.20 swing. This severe overdraft is directly caused by the fraudulent transactions throughout June.",
+      "factors": [
+        {
+          "id": "factor-10163b",
+          "title": "Severe Overdraft",
+          "severity": "high",
+          "description": "Account never went negative in baseline months 1-5, now severely overdrawn"
+        },
+        {
+          "id": "factor-c03f99",
+          "title": "Fraudulent Activity Impact",
+          "severity": "high",
+          "description": "Overdraft directly caused by unauthorized transactions totaling over $69,000"
+        },
+        {
+          "id": "factor-818104",
+          "title": "Cash Flow Disruption",
+          "severity": "high",
+          "description": "Business operations severely compromised by fraudulent spending"
+        }
+      ],
+      "status": "New Alert",
+      "date": "30 Jun",
+      "source": "statement_analysis"
+    },
+    {
+      "id": "alert-ad2d14ce",
+      "riskScore": 75,
+      "riskLevel": "HIGH",
+      "type": "Transaction",
+      "vendor": "CROWN MELBOURNE / JB HI-FI / LOUIS VUITTON",
+      "amount": 8772.0,
+      "reason": "Early warning from Month 5 - casino gambling and luxury purchases",
+      "flags": [
+        "luxury_goods",
+        "gambling",
+        "new_vendor",
+        "spending_spike"
+      ],
+      "summary": "Month 5 shows early fraud indicators: $2,500 at Crown Casino, multiple JB Hi-Fi purchases totaling $2,822, and $3,450 at Louis Vuitton. These represent the first gambling and luxury purchases in the baseline period.",
+      "factors": [
+        {
+          "id": "factor-c37df0",
+          "title": "Gambling Activity",
+          "severity": "high",
+          "description": "First casino transaction in baseline period at Crown Melbourne"
+        },
+        {
+          "id": "factor-c6d00e",
+          "title": "Luxury Goods",
+          "severity": "high",
+          "description": "Louis Vuitton purchase represents first luxury brand transaction"
+        },
+        {
+          "id": "factor-2390f3",
+          "title": "Multiple Electronics Purchases",
+          "severity": "medium",
+          "description": "Three JB Hi-Fi purchases in one day suggest personal electronics buying"
+        }
+      ],
+      "status": "New Alert",
+      "date": "09 May - 17 May",
+      "source": "statement_analysis"
+    }
+  ],
+  "processed_email_ids": [
+    "19c37afca062468b",
+    "19c398933c30ec58",
+    "19c3a23eaacd901c",
+    "19c3a4cb93c5c41f",
+    "19c3a870d986f533",
+    "19c3a9c7dce6b1e0"
+  ]
+}

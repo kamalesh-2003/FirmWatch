@@ -1,8 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: 'class',
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  safelist: [
+    { pattern: /^bg-whitesmoke$/ },
   ],
   theme: {
     extend: {
@@ -10,6 +14,7 @@ export default {
         sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
       },
       colors: {
+        'whitesmoke': '#f5f5f5',
         'dark-blue': '#0f172a',
         'dark-gray': '#1e293b',
         'glass': 'rgba(255, 255, 255, 0.05)',

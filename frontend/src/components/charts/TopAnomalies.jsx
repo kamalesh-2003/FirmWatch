@@ -1,16 +1,25 @@
 import React from 'react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts'
+import { useTheme } from '../../contexts/ThemeContext'
 
 const TopAnomalies = ({ data }) => {
+  const { isDark } = useTheme()
   if (!data) return null
 
   const colors = ['#ef4444', '#f59e0b', '#f97316', '#10b981']
+  const gridStroke = isDark ? '#475569' : '#e2e8f0'
+  const axisStroke = isDark ? '#94a3b8' : '#64748b'
+  const tooltipStyle = isDark
+    ? { backgroundColor: '#1e293b', border: '1px solid #475569', borderRadius: '8px', color: '#ffffff' }
+    : { backgroundColor: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '8px', color: '#18181b' }
+  const tooltipLabelStyle = { color: isDark ? '#ffffff' : '#18181b' }
+  const tooltipItemStyle = { color: isDark ? '#ffffff' : '#18181b' }
 
   if (data.length === 0) {
     return (
-      <div className="bg-slate-800/85 backdrop-blur-xl border border-slate-600/50 border-l-4 border-l-blue-500 rounded-2xl p-6 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-slate-500/60">
-        <h3 className="text-lg font-bold text-slate-100 tracking-tight mb-5">Top Anomalies</h3>
-        <div className="h-[250px] flex items-center justify-center text-slate-400 text-sm">
+      <div className="bg-whitesmoke dark:bg-neutral-900/95 backdrop-blur-xl border border-neutral-200 dark:border-neutral-700 border-l-4 border-l-neutral-500 dark:border-l-neutral-500 rounded-2xl p-6 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-neutral-300 dark:hover:border-neutral-600">
+        <h3 className="text-lg font-bold text-neutral-900 dark:text-neutral-100 tracking-tight mb-5">Top Anomalies</h3>
+        <div className="h-[250px] flex items-center justify-center text-neutral-500 dark:text-neutral-400 text-sm">
           No anomalies yet
         </div>
       </div>
@@ -18,32 +27,27 @@ const TopAnomalies = ({ data }) => {
   }
 
   return (
-    <div className="bg-slate-800/85 backdrop-blur-xl border border-slate-600/50 border-l-4 border-l-blue-500 rounded-2xl p-6 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-slate-500/60">
-      <h3 className="text-lg font-bold text-slate-100 tracking-tight mb-5">Top Anomalies</h3>
+    <div className="bg-whitesmoke dark:bg-neutral-900/95 backdrop-blur-xl border border-neutral-200 dark:border-neutral-700 border-l-4 border-l-neutral-500 dark:border-l-neutral-500 rounded-2xl p-6 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-neutral-300 dark:hover:border-neutral-600">
+      <h3 className="text-lg font-bold text-neutral-900 dark:text-neutral-100 tracking-tight mb-5">Top Anomalies</h3>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart
           data={data}
           layout="vertical"
           margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
         >
-          <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
-          <XAxis type="number" stroke="#94a3b8" style={{ fontSize: '12px' }} />
+          <CartesianGrid strokeDasharray="3 3" stroke={gridStroke} />
+          <XAxis type="number" stroke={axisStroke} style={{ fontSize: '12px' }} />
           <YAxis
             dataKey="type"
             type="category"
-            stroke="#94a3b8"
+            stroke={axisStroke}
             style={{ fontSize: '12px' }}
             width={120}
           />
           <Tooltip
-            contentStyle={{
-              backgroundColor: '#1e293b',
-              border: '1px solid #475569',
-              borderRadius: '8px',
-              color: '#ffffff',
-            }}
-            labelStyle={{ color: '#ffffff' }}
-            itemStyle={{ color: '#ffffff' }}
+            contentStyle={tooltipStyle}
+            labelStyle={tooltipLabelStyle}
+            itemStyle={tooltipItemStyle}
           />
           <Bar dataKey="count" radius={[0, 4, 4, 0]}>
             {data.map((entry, index) => (
@@ -62,7 +66,7 @@ const TopAnomalies = ({ data }) => {
               className="w-3 h-3 rounded"
               style={{ backgroundColor: colors[index % colors.length] }}
             />
-            <span className="text-slate-400">{item.type}</span>
+            <span className="text-neutral-500 dark:text-neutral-400">{item.type}</span>
           </div>
         ))}
       </div>
