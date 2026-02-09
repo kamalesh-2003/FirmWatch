@@ -7,6 +7,7 @@ import RiskDistribution from '../components/charts/RiskDistribution'
 import AlertsOverTime from '../components/charts/AlertsOverTime'
 import TopAnomalies from '../components/charts/TopAnomalies'
 import AlertQueue from '../components/tables/AlertQueue'
+import BankStatements from '../components/tables/BankStatements'
 import InvestigationDetails from '../components/panels/InvestigationDetails'
 import PatternInsights from '../components/panels/PatternInsights'
 import TopRiskVendors from '../components/panels/TopRiskVendors'
@@ -22,6 +23,7 @@ const Dashboard = () => {
     investigationCase,
     patternInsights,
     topRiskVendors,
+    statements,
     loading,
     syncing,
     uploading,
@@ -95,11 +97,6 @@ const Dashboard = () => {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <select className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 text-black dark:text-neutral-200 rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600 transition-all">
-              <option>Last 30 Days</option>
-              <option>Last 7 Days</option>
-              <option>Last 90 Days</option>
-            </select>
             <input
               ref={fileInputRef}
               type="file"
@@ -145,6 +142,11 @@ const Dashboard = () => {
         {/* Top Metrics */}
         <div className="animate-fade-in-up animate-delay-75">
           <TopMetrics summary={summary} />
+        </div>
+
+        {/* Bank Statements */}
+        <div className="mb-8 animate-fade-in-up animate-delay-100">
+          <BankStatements statements={statements} />
         </div>
 
         {/* Analytics Row */}

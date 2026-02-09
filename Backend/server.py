@@ -1,10 +1,12 @@
 """FastAPI server connecting Composio Gmail + OpenRouter analysis to the frontend."""
 
 import os
+import re
 import json
 import uuid
 import logging
 import tempfile
+from pathlib import Path
 from datetime import datetime
 from collections import Counter
 
@@ -16,6 +18,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from composio import Composio
 
 from storage import load_data, save_data
+
+# Project root where statement PDFs live
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 load_dotenv()
 
@@ -442,10 +447,50 @@ async def sync_email():
     save_data(data)
     logger.info(f"Sync complete. {processed_count} new alert(s) saved.")
 
+    # 5. Also trigger bank statement analysis
+    stmt_count = 0
+    try:
+        flagged = await analyze_statements_with_ai()
+        if isinstance(flagged, list) and flagged:
+            data = load_data()
+            # Remove previous statement-analysis alerts to avoid duplicates
+            data["alerts"] = [a for a in data["alerts"] if a.get("source") != "statement_analysis"]
+            for txn in flagged:
+                aid = f"alert-{uuid.uuid4().hex[:8]}"
+                factors = []
+                for fct in txn.get("factors", []):
+                    factors.append({
+                        "id": f"factor-{uuid.uuid4().hex[:6]}",
+                        "title": fct.get("title", "Unknown"),
+                        "severity": fct.get("severity", "medium"),
+                        "description": fct.get("description", ""),
+                    })
+                data["alerts"].append({
+                    "id": aid,
+                    "riskScore": txn.get("riskScore", 0),
+                    "riskLevel": txn.get("riskLevel", "LOW"),
+                    "type": "Transaction",
+                    "vendor": txn.get("vendor", "Unknown"),
+                    "amount": txn.get("amount"),
+                    "reason": txn.get("reason", ""),
+                    "flags": txn.get("flags", []),
+                    "summary": txn.get("summary", ""),
+                    "factors": factors,
+                    "status": "New Alert",
+                    "date": txn.get("transactionDate", datetime.utcnow().isoformat()),
+                    "source": "statement_analysis",
+                })
+                stmt_count += 1
+            save_data(data)
+            logger.info(f"Statement analysis added {stmt_count} alert(s) during sync.")
+    except Exception as e:
+        logger.warning(f"Statement analysis during sync failed (non-fatal): {e}")
+
     return {
         "success": True,
-        "message": f"Processed {processed_count} new invoice email(s).",
+        "message": f"Processed {processed_count} email(s) and flagged {stmt_count} statement transaction(s).",
         "processed": processed_count,
+        "statementAlerts": stmt_count,
     }
 
 
@@ -605,6 +650,356 @@ async def upload_statement(file: UploadFile = File(...)):
     return {
         "success": True,
         "message": f"Processed {processed_count} suspicious transaction(s) from {file.filename}.",
+        "processed": processed_count,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Bank Statement parsing + analysis
+# ---------------------------------------------------------------------------
+
+MONTH_LABELS = {1: "Jan", 2: "Feb", 3: "Mar", 4: "Apr", 5: "May", 6: "Jun"}
+
+# In-memory cache for parsed statements (they never change)
+_statements_cache: dict | None = None
+
+
+def _parse_statement_pdf(pdf_path: str) -> dict:
+    """Parse a single bank statement PDF into structured data.
+
+    The PDF text has metadata on separate lines:
+        Statement Period
+        1 January 2018 - 31 January 2018
+        Closing Balance
+        $37643.40 CR
+
+    Transaction rows span multiple lines:
+        02 Jan DIRECT DEBIT - PROPERTY 4500.00 38000.00
+        MANAGEMENT CO Office Lease - 123 CR
+        Business St
+    """
+    text = ""
+    with pdfplumber.open(pdf_path) as pdf:
+        for page in pdf.pages:
+            page_text = page.extract_text()
+            if page_text:
+                text += page_text + "\n"
+
+    lines = text.split("\n")
+
+    # Extract metadata by finding the label line, then reading the next line
+    period = ""
+    closing_balance_str = "0"
+    opening_balance_str = "0"
+
+    for idx, line in enumerate(lines):
+        stripped = line.strip()
+        if stripped == "Statement Period" and idx + 1 < len(lines):
+            period = lines[idx + 1].strip()
+        elif stripped == "Closing Balance" and idx + 1 < len(lines):
+            # e.g. "$37643.40 CR" or "$-58192.00 CR"
+            cb_line = lines[idx + 1].strip()
+            cb_match = re.search(r"\$?([\-]?[\d,]+\.\d{2})", cb_line)
+            if cb_match:
+                closing_balance_str = cb_match.group(1).replace(",", "")
+
+    # Opening balance is in the transaction area: "01 Jan 2018 OPENING BALANCE 42500.00"
+    date_pattern = re.compile(
+        r"^(\d{1,2}\s+(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)(?:\s+\d{4})?)\s+"
+    )
+
+    for line in lines:
+        stripped = line.strip()
+        m = date_pattern.match(stripped)
+        if m and "OPENING BALANCE" in stripped.upper():
+            ob_match = re.search(r"([\-]?\d+[\d,]*\.\d{2})", stripped[m.end():])
+            if ob_match:
+                opening_balance_str = ob_match.group(1).replace(",", "")
+            break
+
+    # Parse transactions
+    # Each transaction block starts with a date line containing amounts at the end:
+    #   "02 Jan DIRECT DEBIT - PROPERTY 4500.00 38000.00"
+    # Followed by optional continuation lines (extra description, "CR"):
+    #   "MANAGEMENT CO Office Lease - 123 CR"
+    #   "Business St"
+    transactions = []
+    two_amounts = re.compile(r"([\-]?\d+\.\d{2})\s+([\-]?\d+\.\d{2})\s*$")
+
+    i = 0
+    while i < len(lines):
+        stripped = lines[i].strip()
+        m = date_pattern.match(stripped)
+        if m:
+            date_str = m.group(1).strip()
+            first_line_rest = stripped[m.end():].strip()
+
+            # Skip OPENING BALANCE
+            if "OPENING BALANCE" in first_line_rest.upper():
+                i += 1
+                continue
+
+            # The amounts (amount + balance) are at the end of the FIRST line only
+            am = two_amounts.search(first_line_rest)
+            if am:
+                desc_part1 = first_line_rest[: am.start()].strip()
+                amt1 = float(am.group(1))
+                balance = float(am.group(2))
+
+                # Collect continuation lines for more description text
+                desc_parts = [desc_part1] if desc_part1 else []
+                j = i + 1
+                while j < len(lines):
+                    next_stripped = lines[j].strip()
+                    if not next_stripped or date_pattern.match(next_stripped):
+                        break
+                    # Strip "CR" from continuation lines
+                    cleaned = next_stripped.replace(" CR", "").replace("CR", "").strip()
+                    if cleaned:
+                        desc_parts.append(cleaned)
+                    j += 1
+
+                description = " ".join(desc_parts)
+
+                # Determine debit vs credit by comparing balance to previous
+                debit = None
+                credit = None
+                if transactions:
+                    prev_balance = transactions[-1]["balance"]
+                else:
+                    try:
+                        prev_balance = float(opening_balance_str)
+                    except ValueError:
+                        prev_balance = 0.0
+
+                if balance < prev_balance:
+                    debit = amt1
+                else:
+                    credit = amt1
+
+                transactions.append({
+                    "date": date_str,
+                    "description": description,
+                    "debit": debit,
+                    "credit": credit,
+                    "balance": balance,
+                })
+                i = j
+            else:
+                i += 1
+        else:
+            i += 1
+
+    try:
+        ob_val = float(opening_balance_str)
+    except ValueError:
+        ob_val = 0.0
+    try:
+        cb_val = float(closing_balance_str)
+    except ValueError:
+        cb_val = 0.0
+
+    return {
+        "period": period,
+        "openingBalance": ob_val,
+        "closingBalance": cb_val,
+        "transactions": transactions,
+    }
+
+
+def parse_all_statements() -> dict:
+    """Parse all 6 statement PDFs, return dict keyed by month number."""
+    global _statements_cache
+    if _statements_cache is not None:
+        return _statements_cache
+
+    result = {}
+    for month_num in range(1, 7):
+        pdf_path = PROJECT_ROOT / f"statement_month_{month_num}.pdf"
+        if pdf_path.exists():
+            try:
+                data = _parse_statement_pdf(str(pdf_path))
+                result[month_num] = {
+                    "month": month_num,
+                    "label": MONTH_LABELS.get(month_num, f"M{month_num}"),
+                    **data,
+                }
+                logger.info(
+                    f"Parsed statement month {month_num}: "
+                    f"{len(data['transactions'])} transactions"
+                )
+            except Exception as e:
+                logger.error(f"Failed to parse statement_month_{month_num}.pdf: {e}")
+                result[month_num] = {
+                    "month": month_num,
+                    "label": MONTH_LABELS.get(month_num, f"M{month_num}"),
+                    "period": "",
+                    "openingBalance": 0,
+                    "closingBalance": 0,
+                    "transactions": [],
+                }
+        else:
+            logger.warning(f"Statement PDF not found: {pdf_path}")
+
+    _statements_cache = result
+    return result
+
+
+@app.get("/api/statements")
+async def get_statements():
+    """Return parsed transaction data for all 6 months."""
+    return parse_all_statements()
+
+
+# Prompt for baseline-comparison fraud analysis
+STATEMENT_ANALYSIS_PROMPT = """You are a financial fraud analyst AI for FIRM HACKS PVT LTD, an Australian business.
+
+Below are 6 months of bank statements. Months 1-5 (January to May) represent NORMAL business operations — this is the baseline. Month 6 (June) is the CURRENT month under review.
+
+Your task: Compare Month 6 transactions against the baseline (Months 1-5) and identify ALL suspicious or fraudulent transactions in Month 6.
+
+Flag these patterns:
+- Sudden spending spikes vs historical averages
+- New vendors/payees never seen in months 1-5
+- Offshore wire transfers or international payments
+- Cryptocurrency exchange purchases
+- ATM withdrawals that appear to be structuring (multiple same-day withdrawals)
+- Luxury goods or personal spending on a business account
+- Transfers to personal accounts (embezzlement)
+- Abnormal payment frequency or timing
+- Missing recurring vendors (normal business payments that stopped)
+- Account balance going negative (overdraft)
+
+BANK STATEMENTS:
+{statements_text}
+
+Respond ONLY with valid JSON (no markdown, no extra text) — an array of flagged transactions from Month 6:
+[
+  {{
+    "riskScore": <integer 0-100>,
+    "riskLevel": "<LOW|MEDIUM|HIGH>",
+    "reason": "<one-line reason>",
+    "flags": ["<flag1>", "<flag2>"],
+    "summary": "<2-3 sentence analysis comparing to baseline>",
+    "amount": <number or null>,
+    "vendor": "<vendor/entity extracted from transaction description>",
+    "transactionDate": "<date from the statement>",
+    "factors": [
+      {{
+        "title": "<factor name>",
+        "severity": "<high|medium|low>",
+        "description": "<explanation referencing baseline comparison>"
+      }}
+    ]
+  }}
+]
+
+Be thorough — flag every suspicious transaction in Month 6. If a Month 5 transaction is also suspicious (early warning), include it too with a note."""
+
+
+async def analyze_statements_with_ai() -> list[dict]:
+    """Send all 6 months of statement text to OpenRouter for baseline-comparison analysis."""
+    # Extract raw text from each PDF
+    statements_text = ""
+    for month_num in range(1, 7):
+        pdf_path = PROJECT_ROOT / f"statement_month_{month_num}.pdf"
+        if not pdf_path.exists():
+            continue
+        text = ""
+        with pdfplumber.open(str(pdf_path)) as pdf:
+            for page in pdf.pages:
+                page_text = page.extract_text()
+                if page_text:
+                    text += page_text + "\n"
+        statements_text += f"\n{'='*60}\nMONTH {month_num} ({MONTH_LABELS.get(month_num, '')})\n{'='*60}\n{text}\n"
+
+    prompt = STATEMENT_ANALYSIS_PROMPT.format(statements_text=statements_text)
+
+    async with httpx.AsyncClient(timeout=120.0) as client:
+        resp = await client.post(
+            "https://openrouter.ai/api/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+                "Content-Type": "application/json",
+            },
+            json={
+                "model": "anthropic/claude-sonnet-4",
+                "messages": [{"role": "user", "content": prompt}],
+                "temperature": 0.2,
+            },
+        )
+        resp.raise_for_status()
+        content = resp.json()["choices"][0]["message"]["content"]
+
+        # Strip markdown fences if present
+        content = content.strip()
+        if content.startswith("```"):
+            content = content.split("\n", 1)[1]
+        if content.endswith("```"):
+            content = content.rsplit("```", 1)[0]
+        content = content.strip()
+
+        return json.loads(content)
+
+
+@app.post("/api/analyze-statements")
+async def analyze_statements_endpoint():
+    """Analyze all 6 bank statements: compare month 6 against months 1-5 baseline."""
+    logger.info("Starting bank statement analysis...")
+
+    try:
+        flagged = await analyze_statements_with_ai()
+    except Exception as e:
+        logger.error(f"Statement analysis failed: {e}")
+        raise HTTPException(status_code=502, detail=f"Analysis failed: {e}")
+
+    if not isinstance(flagged, list):
+        flagged = []
+
+    # Create alerts from flagged transactions
+    data = load_data()
+
+    # Remove previous statement-analysis alerts to avoid duplicates on re-sync
+    data["alerts"] = [a for a in data["alerts"] if a.get("source") != "statement_analysis"]
+
+    processed_count = 0
+    for txn in flagged:
+        alert_id = f"alert-{uuid.uuid4().hex[:8]}"
+        factors = []
+        for f in txn.get("factors", []):
+            factors.append({
+                "id": f"factor-{uuid.uuid4().hex[:6]}",
+                "title": f.get("title", "Unknown"),
+                "severity": f.get("severity", "medium"),
+                "description": f.get("description", ""),
+            })
+
+        alert = {
+            "id": alert_id,
+            "riskScore": txn.get("riskScore", 0),
+            "riskLevel": txn.get("riskLevel", "LOW"),
+            "type": "Transaction",
+            "vendor": txn.get("vendor", "Unknown"),
+            "amount": txn.get("amount"),
+            "reason": txn.get("reason", ""),
+            "flags": txn.get("flags", []),
+            "summary": txn.get("summary", ""),
+            "factors": factors,
+            "status": "New Alert",
+            "date": txn.get("transactionDate", datetime.utcnow().isoformat()),
+            "source": "statement_analysis",
+        }
+
+        data["alerts"].append(alert)
+        processed_count += 1
+        logger.info(f"Statement alert: {txn.get('vendor', 'Unknown')} -> risk={txn.get('riskLevel')}")
+
+    save_data(data)
+    logger.info(f"Statement analysis complete. {processed_count} alert(s) saved.")
+
+    return {
+        "success": True,
+        "message": f"Flagged {processed_count} suspicious transaction(s) from bank statements.",
         "processed": processed_count,
     }
 

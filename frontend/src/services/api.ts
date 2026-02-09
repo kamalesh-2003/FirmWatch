@@ -57,6 +57,23 @@ export interface TopRiskVendor {
   alertCount: number
 }
 
+export interface StatementTransaction {
+  date: string
+  description: string
+  debit: number | null
+  credit: number | null
+  balance: number
+}
+
+export interface StatementMonth {
+  month: number
+  label: string
+  period: string
+  openingBalance: number
+  closingBalance: number
+  transactions: StatementTransaction[]
+}
+
 export interface RiskFactor {
   id: string
   title: string
@@ -141,6 +158,18 @@ export const api = {
     formData.append('file', file)
     const res = await fetch('/api/upload-statement', { method: 'POST', body: formData })
     if (!res.ok) throw new Error('Upload failed')
+    return res.json()
+  },
+
+  async getStatements(): Promise<Record<number, StatementMonth>> {
+    const res = await fetch('/api/statements')
+    if (!res.ok) throw new Error('Failed to fetch statements')
+    return res.json()
+  },
+
+  async analyzeStatements(): Promise<{ success: boolean; message: string; processed?: number }> {
+    const res = await fetch('/api/analyze-statements', { method: 'POST' })
+    if (!res.ok) throw new Error('Statement analysis failed')
     return res.json()
   },
 }

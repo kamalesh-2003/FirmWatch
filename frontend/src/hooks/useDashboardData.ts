@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { api, DashboardSummary, Alert, RiskDistribution, AlertTimeSeries, Anomaly, InvestigationCase, PatternInsight, TopRiskVendor } from '../services/api'
+import { api, DashboardSummary, Alert, RiskDistribution, AlertTimeSeries, Anomaly, InvestigationCase, PatternInsight, TopRiskVendor, StatementMonth } from '../services/api'
 
 export interface DashboardData {
   summary: DashboardSummary | null
@@ -10,6 +10,7 @@ export interface DashboardData {
   investigationCase: InvestigationCase | null
   patternInsights: PatternInsight[]
   topRiskVendors: TopRiskVendor[]
+  statements: Record<number, StatementMonth>
   loading: boolean
   error: string | null
 }
@@ -24,6 +25,7 @@ export function useDashboardData() {
     investigationCase: null,
     patternInsights: [],
     topRiskVendors: [],
+    statements: {},
     loading: true,
     error: null,
   })
@@ -48,6 +50,7 @@ export function useDashboardData() {
         investigationCase,
         patternInsights,
         topRiskVendors,
+        statements,
       ] = await Promise.all([
         api.getDashboardSummary(),
         api.getAlerts(),
@@ -57,6 +60,7 @@ export function useDashboardData() {
         api.getInvestigationCase(),
         api.getPatternInsights(),
         api.getTopRiskVendors(),
+        api.getStatements(),
       ])
 
       setData({
@@ -68,6 +72,7 @@ export function useDashboardData() {
         investigationCase,
         patternInsights,
         topRiskVendors,
+        statements,
         loading: false,
         error: null,
       })

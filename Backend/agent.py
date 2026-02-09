@@ -15,7 +15,7 @@ load_dotenv()
 composio = Composio()
 
 # Create a session for your user
-user_id = "kamalesh"
+user_id = "user"
 session = composio.create(user_id=user_id)
 
 # Connect Gmail
@@ -46,6 +46,7 @@ except Exception as e:
 
 # Connect Google Drive
 print("Connecting Google Drive...")
+
 try:
     drive_connection = session.authorize("googledrive")
     if hasattr(drive_connection, "url") and drive_connection.url:
